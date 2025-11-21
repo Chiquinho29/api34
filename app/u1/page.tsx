@@ -383,9 +383,9 @@ export default function U1() {
   }
 
   const handlePhoneInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formattedValue = e.target.value.replace(/[^0-9-()\s]/g, "")
+    const formattedValue = e.target.value.replace(/[^0-9\-$$$$\s]/g, "")
     setPhoneNumber(formattedValue)
-    setIsPhotoPrivate(false) // Reseta o aviso ao digitar novo número
+    setIsPhotoPrivate(false)
     setPhotoError("")
     if (debounceTimeout) clearTimeout(debounceTimeout)
     const newTimeout = setTimeout(() => {
@@ -437,7 +437,7 @@ export default function U1() {
     { id: "analyzing", text: "Analyzing database...", status: "pending" },
     { id: "fetching", text: "Fetching profile information...", status: "pending" },
     { id: "detecting", text: "Detecting device location...", status: "pending" },
-    { id: "suspicious", text: Suspicious activity near ${location?.city || '...'}, status: "pending" },
+    { id: "suspicious", text: Suspicious activity near ${location?.city || '...'} , status: "pending" },
     { id: "preparing", text: "Preparing private channel...", status: "pending" },
     { id: "established", text: "Private channel established!", status: "pending" },
     { id: "synchronizing", text: "Synchronizing messages...", status: "pending" },
@@ -606,7 +606,7 @@ export default function U1() {
             <div className="flex items-center bg-white rounded-xl border-2 border-gray-300 shadow-sm focus-within:ring-2 focus-within:ring-green-500 focus-within:border-green-500 transition-all">
               <div className="relative">
                 <button type="button" onClick={() => setShowCountryDropdown(!showCountryDropdown)} className="flex items-center gap-2 h-14 px-4 bg-gray-50 hover:bg-gray-100 rounded-l-lg transition-colors"><span className="text-2xl">{selectedCountry.flag}</span><span className="text-gray-800 font-medium">{selectedCountry.code}</span></button>
-                {showCountryDropdown && (<div className="absolute top-full left-0 mt-2 bg-white border rounded-xl shadow-lg z-50 w-80 max-h-72 overflow-y-auto"><div className="p-2 sticky top-0 bg-white border-b"><Input type="text" placeholder="Search country or code..." value={countrySearch} onChange={(e) => setCountrySearch(e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm" /></div><ul className="py-1">{filteredCountries.length > 0 ? (filteredCountries.map((country, index) => (<li key={${country.name}-${country.code}-${index}}><button type="button" onClick={() => handleSelectCountry(country)} className="w-full px-3 py-2 text-left hover:bg-gray-100 flex items-center gap-3 text-sm"><span className="text-xl">{country.flag}</span><span className="text-gray-800 font-medium">{country.name}</span><span className="text-gray-500 ml-auto">{country.code}</span></button></li>))) : (<li className="px-3 py-2 text-sm text-gray-500 text-center">No countries found.</li>)}</ul></div>)}
+                {showCountryDropdown && (<div className="absolute top-full left-0 mt-2 bg-white border rounded-xl shadow-lg z-50 w-80 max-h-72 overflow-y-auto"><div className="p-2 sticky top-0 bg-white border-b"><Input type="text" placeholder="Search country or code..." value={countrySearch} onChange={(e) => setCountrySearch(e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm" /></div><ul className="py-1">{filteredCountries.length > 0 ? (filteredCountries.map((country, index) => (<li key={${country.name}-${country.code}-${index}}}><button type="button" onClick={() => handleSelectCountry(country)} className="w-full px-3 py-2 text-left hover:bg-gray-100 flex items-center gap-3 text-sm"><span className="text-xl">{country.flag}</span><span className="text-gray-800 font-medium">{country.name}</span><span className="text-gray-500 ml-auto">{country.code}</span></button></li>))) : (<li className="px-3 py-2 text-sm text-gray-500 text-center">No countries found.</li>)}</ul></div>)}
               </div>
               <div className="h-8 w-px bg-gray-200"></div>
               <Input type="tel" placeholder={selectedCountry.placeholder} value={phoneNumber} onChange={handlePhoneInputChange} className="flex-1 h-14 text-lg border-none bg-transparent focus:ring-0" />
@@ -640,7 +640,7 @@ export default function U1() {
                     <div className="w-full bg-gray-200 rounded-full h-2.5"><div className="bg-green-500 h-2.5 rounded-full transition-all duration-100 ease-linear" style={{ width: ${progress}% }}></div></div>
                   </div>
                   <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
-                    {currentSteps.slice(0, visibleSteps).map((step) => (<div key={step.id} className={flex items-start gap-3 text-sm}><div className="flex-shrink-0 w-4 h-4 mt-0.5">{step.status === "loading" ? <Loader2 className="h-4 w-4 animate-spin text-blue-500" /> : step.status === "completed" ? <CheckCircle className="h-4 w-4 text-green-500" /> : <div className="h-3.5 w-3.5 mt-px rounded-full border-2 border-gray-300"></div>}</div><span className={transition-colors duration-300 ${step.status === "completed" ? "text-green-600 font-medium" : step.status === "loading" ? "text-blue-600 font-medium" : "text-gray-600"}}>{step.text}</span></div>))}
+                    {currentSteps.slice(0, visibleSteps).map((step) => (<div key={step.id} className="flex items-start gap-3 text-sm"><div className="flex-shrink-0 w-4 h-4 mt-0.5">{step.status === "loading" ? <Loader2 className="h-4 w-4 animate-spin text-blue-500" /> : step.status === "completed" ? <CheckCircle className="h-4 w-4 text-green-500" /> : <div className="h-3.5 w-3.5 mt-px rounded-full border-2 border-gray-300"></div>}</div><span className={transition-colors duration-300 ${step.status === "completed" ? "text-green-600 font-medium" : step.status === "loading" ? "text-blue-600 font-medium" : "text-gray-600"}}>{step.text}</span></div>))}
                   </div>
                 </div>
               ) : (
@@ -683,6 +683,6 @@ export default function U1() {
         </main>
       </div>
       {selectedConvoIndex !== null && <ChatPopup onClose={() => setSelectedConvoIndex(null)} profilePhoto={reportConversations[selectedConvoIndex].img} conversationData={reportConversations[selectedConvoIndex].chatData} conversationName={reportConversations[selectedConvoIndex].popupName} />}
-    </>
-  )
+    </>
+  )
 }
